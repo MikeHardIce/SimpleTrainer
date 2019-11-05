@@ -1,3 +1,8 @@
+Collection of tiny racket programmes to learn racket.
+
+# GuessingNumbers
+Console app to guess a random number between 0 and 100. 
+
 # SimpleTrainer
 Simple console app to enter some words to help memorize them. Project to explore Racket
 
