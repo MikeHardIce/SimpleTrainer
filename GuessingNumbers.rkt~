@@ -1,8 +1,8 @@
 #lang racket
- 
- ; Guess a random number between 0 and 100
- ; This is an example from "The Book" (Rust lang)
-
+(*
+ Guess a random number between 0 and 100
+ This is an example from "The Book" (Rust lang)
+ *)
 (define (ask-for-number)
   (newline)
   (display "Enter a number (0-100)")
