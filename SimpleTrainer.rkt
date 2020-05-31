@@ -1,4 +1,5 @@
 #lang racket
+(provide start)
 
 ; convert user input to a string
 (define (to-string input)
@@ -19,56 +20,56 @@
 (define words '())
 
 ; workflow for adding new words to the list
-(define (add-words)
-  (display "Adding....")
+(define (add-words output input)
+  (output "Adding....")
   (newline)
-  (display "Enter your word to memorize: ")
-  (define word (to-string (read)))
-  (set! words (append words (list word)))
-  (display "Added word: ")
-  (display (cover-word word))
-  (newline))
+  (output "Enter your word to memorize:")
+  (define word (to-string (input)))
+  (when (> (string-length word) 0)
+      (set! words (append words (list word)))
+      (output "Added word: ")
+      (output (cover-word word))
+      (newline)))
 
-(define (ask-and-verify-input word)
-  (display (cover-word word))
-  (display ": ")
-  (define input (read))
+(define (ask-and-verify-input word output input)
+  (output (cover-word word))
+  (output ": ")
+  (define user-input (input))
   (newline)
-  (cond [(string=? (to-string input) word) (display "Yes!\n")]
-        [(and (number? input) (= input 0)) (display "Abort\n")]
+  (cond [(string=? (to-string user-input) word) (output "Yes!\n")]
+        [(and (number? user-input) (= user-input 0)) (output "Abort\n")]
         [else (begin
-                (display "try again (0 - to get out)\n")
-                (ask-and-verify-input word))]))
+                (output "try again (0 - to get out)\n")
+                (ask-and-verify-input word output input))]))
 
-(define (ask-random-word)
+(define (ask-random-word output input)
   (define word (first (shuffle words)))
-  (ask-and-verify-input word)
-  (display "Continue? (y/n) \n")
-  (define input (to-string (read)))
-  (if (not (string=? input "n"))
-      (ask-random-word)
-      (display "Abort\n")))
+  (ask-and-verify-input word output input)
+  (output "Continue? (y/n) \n")
+  (define user-input (to-string (input)))
+  (if (not (string=? user-input "n"))
+      (ask-random-word output input)
+      (output "Abort\n")))
 
-(define (practice)
-  (display "Practicing...")
+(define (practice output input)
+  (output "Practicing...")
   (newline)
   (if (> (length words) 0)
-      (ask-random-word)
-      (display "No words given.. add some words\n")))
+      (ask-random-word output input)
+      (output "No words given.. add some words\n")))
 
-(define (ask-options)
+(define (ask-options output input)
   (begin
-    (display "0 - Exit\n")
-    (display "1 - Add\n")
-    (display "2 - Practice\n")
-    (read)))
+    (output "0 - Exit\n")
+    (output "1 - Add\n")
+    (output "2 - Practice\n")
+    (input)))
 
 ; Entry point 
-(define (start)
-  (define state (ask-options))
+(define (start output input)
+  (define state (ask-options output input))
   (begin
-    (cond [(= state 1) (add-words)]
-          [(= state 2) (practice)])
-    (if (> state 0) (start) (display "Bye..."))))
+    (cond [(= state 1) (add-words output input)]
+          [(= state 2) (practice output input)])
+    (if (> state 0) (start output input) (output "Bye..."))))
 
-(start)
